@@ -1,0 +1,29 @@
+{
+  "name": "ausenger",
+  "version": "0.0.0",
+  "description": "System for authorization users on web services with messengers.",
+  "main": "site-emulator/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "emulate": "node site-emulator/index.js",
+    "dev": "node-sass -w site-emulator/site/style.scss site-emulator/site/style.css",
+    "telegram": "nodemon bots/telegram/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brezitsky/ausenger.git"
+  },
+  "keywords": [
+    "telegram",
+    "authorization"
+  ],
+  "author": "vtlk",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/brezitsky/ausenger/issues"
+  },
+  "homepage": "https://github.com/brezitsky/ausenger#readme",
+  "dependencies": {
+    "node-telegram-bot-api": "^0.30.0"
+  }
+}
