@@ -24,6 +24,8 @@
   },
   "homepage": "https://github.com/brezitsky/ausenger#readme",
   "dependencies": {
+    "index.js": "0.0.3",
+    "node-sass": "^4.7.2",
     "node-telegram-bot-api": "^0.30.0"
   }
 }
