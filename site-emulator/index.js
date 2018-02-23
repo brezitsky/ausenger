@@ -1,16 +1,43 @@
-const http = require('http');
-const path = require('path');
-const fs = require('fs');
+const express = require('express');
+const bodyParser = require('body-parser');
+const TelegramBot = require('node-telegram-bot-api');
+const token = '536012378:AAGyTAsny5Llqg4SF5--iICStKmlb-d0IrQ';
 
+const bot = new TelegramBot(token, {polling: true});
+const app = express();
 
+app.use(express.static('site-emulator/site'));
 
-const server = http.createServer((req, res) => {
-	let html = fs.readFile(path.resolve(__dirname, 'site/index.html'), (err, data) => {
-		if(err) throw new Error(err);
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
 
-		res.setHeader('Content-Type', 'text/html');
-		res.end(data.toString());
-	})
+// parse application/json
+app.use(bodyParser.json())
+
+app.post('/auth', function (req, res) {
+	// bot.sendMessage(chatId, 'hello world', keyboard);
+	res.send(JSON.stringify(req.body));
 });
 
-server.listen(98, 'localhost');
+
+app.listen(98, function () {
+	console.log('Приклад застосунку, який прослуховує 98-ий порт!');
+});
+
+bot.onText(/^\/keyboard$/g, (msg) => {
+	const chatId = msg.chat.id;
+
+	var keyboard = {
+		reply_markup: JSON.stringify({
+			keyboard: [
+				['Uno'],
+				['Dos'],
+				['Tres'],
+				['Cuatro']
+			]
+		})
+	};
+
+	// send a message to the chat acknowledging receipt of their message
+	bot.sendMessage(chatId, 'hello world', keyboard);
+});

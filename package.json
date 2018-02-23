@@ -5,7 +5,7 @@
   "main": "site-emulator/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "emulate": "node site-emulator/index.js",
+    "emulate": "nodemon site-emulator/index.js",
     "dev": "node-sass -w site-emulator/site/style.scss site-emulator/site/style.css",
     "telegram": "nodemon bots/telegram/index.js"
   },
@@ -24,6 +24,8 @@
   },
   "homepage": "https://github.com/brezitsky/ausenger#readme",
   "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
     "node-telegram-bot-api": "^0.30.0"
   }
 }
