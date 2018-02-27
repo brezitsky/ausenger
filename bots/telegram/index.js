@@ -13,8 +13,9 @@ const bot = new TelegramBot(token, {
 	}
 
 });
-
+//	console.log(bot);
 bot.onText(/^\/keyboard$/g, (msg) => {
+	console.log("working");
 	const chatId = msg.chat.id
 
 	var keyboard = {
@@ -27,7 +28,6 @@ bot.onText(/^\/keyboard$/g, (msg) => {
 			]
 		})
 	}
-
 	// send a message to the chat acknowledging receipt of their message
 	bot.sendMessage(chatId, 'hello world', keyboard);
 });
