@@ -99,102 +99,107 @@ const getTime = new Date();
 console.log("\nBot has been started at " + getTime);
 const bot = new TelegramBot(token, {polling: true});
 
-bot.onText(/\/start/g, msg => {
+// bot.onText(/\/start/g, msg => {
+//
+// })
 
-})
-
-bot.on('message', msg => {
-
+bot.onText(/\/start/, msg => {
 	//const msg_data = [`${msg.chat.id}`, `${msg.chat.first_name}`, `${msg.chat.last_name}`, `${msg.chat.username}`];
 	const chatId = msg.chat.id;
 	console.log(msg);
+		bot.sendMessage(chatId, 'You allowed this bot to message you when you logged on site.')
+})
+
+bot.on('message', msg => {
+	console.log(msg);
+})
 
 	// for (let i = 0; i < msg_data.length; i++)
 	// user_data[i] = msg_data[i];
 
-	let authData = {
-		id: msg.chat.id,
-		first_name: msg.chat.first_name,
-		last_name: msg.chat.last_name,
-		username: msg.chat.username
-	};
+	// let authData = {
+	// 	id: msg.chat.id,
+	// 	first_name: msg.chat.first_name,
+	// 	last_name: msg.chat.last_name,
+	// 	username: msg.chat.username
+	// };
 
-	authRequest(authData, data => {
-		bot.sendMessage(chatId, `ID: ${data.id}\nName: ${data.first_name} ${data.last_name}\nUsername: ${data.username}`);
-	});
+// 	authRequest(authData, data => {
+// 		bot.sendMessage(chatId, `ID: ${data.id}\nName: ${data.first_name} ${data.last_name}\nUsername: ${data.username}`);
+// 	});
+//
+// 	if(msg.text == 'Close keyboard'){
+// 		bot.sendMessage(chatId, 'Closing keyboard', {
+// 			reply_markup: {
+// 				remove_keyboard: true
+// 			}
+// 		})
+// 	}
+// 	else if(msg.text == 'Get inline keyboard') {
+// 		bot.sendMessage(chatId, 'Inline Keyboard', {
+// 			reply_markup: {
+// 				inline_keyboard: [
+// 					[
+// 						{
+// 							text: 'First inline',
+// 							callback_data: 'first_inline'
+// 						}
+// 					],
+// 					[
+// 						{
+// 							text: 'Second inline',
+// 							callback_data: 'second_inline'
+// 						}
+// 					]
+// 				]
+// 			}
+// 		})
+// 	}
+// 	else {
+// 		bot.sendMessage(chatId, 'Keyboard', {
+// 			reply_markup: {
+// 				keyboard: [
+// 					[{
+// 						text: 'Get location',
+// 						request_location: true
+// 					}],
+// 					[{
+// 						text: 'Get contact',
+// 						request_contact: true
+// 					}],
+// 					['Get inline keyboard', 'Close keyboard']
+// 				]
+// 			}
+// 		});
+// 	}
+// });
 
-	if(msg.text == 'Close keyboard'){
-		bot.sendMessage(chatId, 'Closing keyboard', {
-			reply_markup: {
-				remove_keyboard: true
-			}
-		})
-	}
-	else if(msg.text == 'Get inline keyboard') {
-		bot.sendMessage(chatId, 'Inline Keyboard', {
-			reply_markup: {
-				inline_keyboard: [
-					[
-						{
-							text: 'First inline',
-							callback_data: 'first_inline'
-						}
-					],
-					[
-						{
-							text: 'Second inline',
-							callback_data: 'second_inline'
-						}
-					]
-				]
-			}
-		})
-	}
-	else {
-		bot.sendMessage(chatId, 'Keyboard', {
-			reply_markup: {
-				keyboard: [
-					[{
-						text: 'Get location',
-						request_location: true
-					}],
-					[{
-						text: 'Get contact',
-						request_contact: true
-					}],
-					['Get inline keyboard', 'Close keyboard']
-				]
-			}
-		});
-	}
-});
+// bot.on('callback_query', query => {
+// 	bot.answerCallbackQuery(query.id, `${query.data}`)
+// })
 
-bot.on('callback_query', query => {
-	bot.answerCallbackQuery(query.id, `${query.data}`)
-})
-
-bot.on('inline_query', query => {
-	const array = ['https://www.google.com/', 'https://www.wikipedia.org/', 'https://wikileaks.org/',
-	'https://core.telegram.org', 'https://telegram.org/'];
-	const result = [];
-	for(let i = 0; i < 5; i++)
-	{
-		result.push({
-			type: 'article',
-			id: i.toString(),
-			title: 'Title ' + i,
-			input_message_content: {
-				message_text: (i + 1).toString(),
-				disable_web_page_preview: false
-			},
-			url: array[i].toString()
-		});
-	}
-
-	bot.answerInlineQuery(query.id, result, {
-		cached_time: 0
-	})
-})
+// bot.on('inline_query', query => {
+// 	const array = ['https://www.google.com/', 'https://www.wikipedia.org/', 'https://wikileaks.org/',
+// 	'https://core.telegram.org', 'https://telegram.org/'];
+// 	const result = [];
+// 	for(let i = 0; i < 5; i++)
+// 	{
+// 		result.push({
+// 			type: 'article',
+// 			id: i.toString(),
+// 			title: 'Title ' + i,
+// 			input_message_content: {
+// 				message_text: (i + 1).toString(),
+// 				disable_web_page_preview: false
+// 			},
+// 			url: array[i].toString()
+// 		});
+// 	}
+//
+// 	bot.answerInlineQuery(query.id, result, {
+// 		cached_time: 0
+// 	})
+// })
 // bot.onText(/^\/keyboard$/g, (msg) => {
 // 	const chatId = msg.chat.id;
 // 	console.log(msg);
