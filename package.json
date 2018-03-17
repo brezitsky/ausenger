@@ -24,10 +24,11 @@
   },
   "homepage": "https://github.com/brezitsky/ausenger#readme",
   "dependencies": {
-    "index.js": "0.0.3",
-    "node-sass": "^4.7.2",
     "body-parser": "^1.18.2",
     "express": "^4.16.2",
-    "node-telegram-bot-api": "^0.30.0"
+    "index.js": "0.0.3",
+    "node-sass": "^4.7.2",
+    "node-telegram-bot-api": "^0.30.0",
+    "object-merge": "^2.5.1"
   }
 }

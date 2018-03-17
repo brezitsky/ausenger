@@ -1,50 +1,61 @@
+/*******************************************************************************
+*********************** емуляція серверної логіки ******************************
+*******************************************************************************/
 const express = require('express');
 const bodyParser = require('body-parser');
-const TelegramBot = require('node-telegram-bot-api');
 const http = require('http');
 const querystring = require('querystring');
-//const token = '536012378:AAGyTAsny5Llqg4SF5--iICStKmlb-d0IrQ';
-const token = '545750196:AAGtPP3eNi7uKfF7dRPc2ycwuytsExLtp10';
-//const token = '530694020:AAHpJUFS9Lk9Gim9RYo8B-q-SrsDagmCVjo';
-const getTime = new Date();
+const objectMerge = require('object-merge');
 
-//time when program was started
-console.log("\nBot has been started at " + getTime);
-
-const bot = new TelegramBot(token, {polling: true});
+// створюєм тестовий сервер
 const app = express();
 
+// тестовий сервер бере звідси статичні файли
 app.use(express.static('site-emulator/site'));
 
-// parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+// сервер парсить запити типу application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
 
-// parse application/json
-app.use(bodyParser.json())
+// сервер парсить запити типу application/json
+app.use(bodyParser.json());
 
+//сервер слухає вхідні POST-запити на урл '/auth'
 app.post('/auth', function (req, res) {
-	console.log(req.body);
-	res.send(JSON.stringify(req.body));
-	// res.end('test response');
+
+	// вхідні параметри запиту, який надіслав бот на сервер
+	let body = req.body;
+
+	/*
+	На цьому місці відпрацьовує сервер. Він якось обробляє вхідні дані, дивиться,
+	чи є такий юзер в системі чи ше щось тіпа того. Коротше кажучи, виконує ЯКІСЬ
+	логічні дії і видає результат.
+	*/
+	function someServerLogic() {
+		// TODO: реалізувати ЯКІСЬ дії сервера
+
+		// сервена логіка повертає параметри запиту
+		return body;
+	}
+
+	res.send(JSON.stringify(someServerLogic()));
 });
 
+// запускаєм сервер і слухаєм порт
 app.listen(98, function () {
 	console.log('Приклад застосунку, який прослуховує 98-ий порт!');
 });
 
-const user_data = [];
+/*******************************************************************************
+******************* кінець емуляції серверної логіки ***************************
+*******************************************************************************/
 
+/**
+@param {Object || Undefined} params - параметри запиту
+@param {Function} callback - функція, яка відпрацює після запиту
+*/
+function authRequest(params, callback) {
 
-bot.on('message', msg => {
-
-	const msg_data = [`${msg.chat.id}`, `${msg.chat.first_name}`, `${msg.chat.last_name}`, `${msg.chat.username}`];
-	const chatId = msg.chat.id;
-	console.log(msg);
-
-	for (let i = 0; i < msg_data.length; i++)
-	user_data[i] = msg_data[i];
-
-	let request = http.request({
+	let requestParams = {
 		host: 'localhost',
 		method: 'post',
 		path: '/auth',
@@ -52,35 +63,65 @@ bot.on('message', msg => {
 		headers: {
 			'Content-Type': 'application/json'
 		}
-	}, (res) => {
-		console.log(`STATUS: ${res.statusCode}`);
-		console.log(`HEADERS: ${JSON.stringify(res.headers)}`);
+	};
 
+	let request = http.request(requestParams, (res) => {
 		res.setEncoding('utf8');
 
 		let output = '';
 
+		// клеїть відповідь від сервера (чанки)
 		res.on('data', (chunk) => {
-			// console.log(`BODY: ${chunk}`);
 			output += chunk;
 		});
 
+		/*
+		після того, як всі дані отримані і склеєні, викликає функцію (яка передана
+		в аргумент) і передає їй відповідь від сервера у вигляді масиву
+		*/
 		res.on('end', () => {
-			console.log('No more data in response.');
-			let a = JSON.parse(output);
-
-			bot.sendMessage(chatId, `${a.id} - ${a.first_name}`);
+			callback(JSON.parse(output));
 		});
 	})
 
-
 	// відправка запиту на сайт
-	request.write(JSON.stringify({
-		id: msg.chat.id,
-		first_name: msg.chat.first_name
-	}));
+	request.write(JSON.stringify(params));
 
 	request.end();
+}
+
+
+const TelegramBot = require('node-telegram-bot-api');
+const token = '545750196:AAGtPP3eNi7uKfF7dRPc2ycwuytsExLtp10';
+const getTime = new Date();
+
+//time when program was started
+console.log("\nBot has been started at " + getTime);
+const bot = new TelegramBot(token, {polling: true});
+
+bot.onText(/\/start/g, msg => {
+
+})
+
+bot.on('message', msg => {
+
+	//const msg_data = [`${msg.chat.id}`, `${msg.chat.first_name}`, `${msg.chat.last_name}`, `${msg.chat.username}`];
+	const chatId = msg.chat.id;
+	console.log(msg);
+
+	// for (let i = 0; i < msg_data.length; i++)
+	// user_data[i] = msg_data[i];
+
+	let authData = {
+		id: msg.chat.id,
+		first_name: msg.chat.first_name,
+		last_name: msg.chat.last_name,
+		username: msg.chat.username
+	};
+
+	authRequest(authData, data => {
+		bot.sendMessage(chatId, `ID: ${data.id}\nName: ${data.first_name} ${data.last_name}\nUsername: ${data.username}`);
+	});
 
 	if(msg.text == 'Close keyboard'){
 		bot.sendMessage(chatId, 'Closing keyboard', {
@@ -125,11 +166,6 @@ bot.on('message', msg => {
 				]
 			}
 		});
-		for(var i = 0; i < user_data.length; i++)
-		{
-
-			console.log(user_data[i]);
-		}
 	}
 });
 
